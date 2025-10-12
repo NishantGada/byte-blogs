@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RichTextEditor } from "@mantine/rte";
-import { TextInput, Button, Container, Title, Stack } from "@mantine/core";
+import { Box, Input, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -16,8 +16,8 @@ const EditBlog: React.FC = () => {
   const [coverImage, setCoverImage] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // Fetch blog data
   useEffect(() => {
     if (id) {
       SendRequest(`/api/blogs/${id}`, {}, "GET", {
@@ -45,11 +45,10 @@ const EditBlog: React.FC = () => {
       return;
     }
 
-    const blogData = { title, content, category, coverImage };
-
+    setSaving(true);
     try {
       if (id) {
-        await SendRequest(`/api/blogs/${id}`, blogData, "PUT", {
+        await SendRequest(`/api/blogs/${id}`, { title, category, coverImage, content }, "PUT", {
           Authorization: `Bearer ${token}`,
         });
         alert("Blog updated successfully!");
@@ -58,60 +57,63 @@ const EditBlog: React.FC = () => {
     } catch (err) {
       console.error(err);
       alert("Failed to update blog.");
+    } finally {
+      setSaving(false);
     }
   };
 
   if (loading) {
-    return <Container size="sm" mt="xl"><p>Loading blog...</p></Container>;
+    return (
+      <Box textAlign="center" mt={10}>
+        <Spinner size="xl" />
+      </Box>
+    );
   }
 
   return (
-    <Container size="sm" mt="xl">
-      <Title order={2} ta="center" mb="lg">
+    <Box maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto">
+      <Heading as="h2" size="lg" textAlign="center" mb={6}>
         Edit Blog
-      </Title>
-
-      <Stack>
-        <TextInput
-          label="Title"
-          placeholder="Enter blog title"
+      </Heading>
+      <VStack spacing={4}>
+        <Input
+          placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
         />
-
-        <TextInput
-          label="Category"
-          placeholder="Enter blog category"
+        <Input
+          placeholder="Category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          required
         />
-
-        <TextInput
-          label="Cover Image URL"
-          placeholder="Enter cover image URL"
+        <Input
+          placeholder="Cover Image URL"
           value={coverImage}
           onChange={(e) => setCoverImage(e.target.value)}
         />
-
         <RichTextEditor
-          key={id} // forces remount when id changes
+          key={id}
           value={content}
           onChange={setContent}
-          style={{ minHeight: 200 }}
-          controls={[
-            ["bold", "italic", "underline"],
-            ["h1", "h2", "h3"],
-            ["unorderedList", "orderedList"],
-            ["link", "image"],
-            ["alignLeft", "alignCenter", "alignRight"],
-          ]}
+          style={{ minHeight: 400, width: "100%" }}
+          // controls={[
+          //   ["bold", "italic", "underline"],
+          //   ["h1", "h2", "h3"],
+          //   ["unorderedList", "orderedList"],
+          //   ["link", "image"],
+          //   ["alignLeft", "alignCenter", "alignRight"],
+          // ]}
         />
-
-        <Button onClick={handleSubmit}>Update Blog</Button>
-      </Stack>
-    </Container>
+        <Button
+          colorScheme="gray"
+          w="full"
+          onClick={handleSubmit}
+          isLoading={saving}
+        >
+          Update Blog
+        </Button>
+      </VStack>
+    </Box>
   );
 };
 

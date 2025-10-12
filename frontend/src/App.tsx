@@ -1,10 +1,15 @@
-import React, { useContext, ReactNode } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react';
+import type { ReactNode } from "react";
+import React, { useContext } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
-import LoginPage from "./pages/LoginPage/LoginPage";
 import AdminDashboardPage from "./pages/AdminPage/AdminPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import BlogListPage from './pages/BlogListPage/BlogListPage';
+import BlogDetailPage from './pages/BlogDetailPage/BlogDetailPage';
+import Navbar from './components/Navbar';
 
-const App: React.FC = () => {
+const App = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   // ProtectedRoute wrapper for admin pages
@@ -16,23 +21,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <Routes>
-      {/* Public login route */}
-      <Route path="/login" element={<LoginPage />} />
+    <ChakraProvider>
+      <Navbar />
+      <Routes>
+        {/* Public login route */}
+        <Route path="/login" element={<LoginPage />} />
 
-      {/* Admin routes */}
-      <Route
-        path="/admin/*"
-        element={
-          <ProtectedRoute>
-            <AdminDashboardPage />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="/blogs" element={<BlogListPage />} />
+        <Route path="/blogs/:id" element={<BlogDetailPage />} />
 
-      {/* Redirect any unknown route to login */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+        {/* Admin routes */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute>
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Redirect any unknown route to login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </ChakraProvider>
   );
 };
 

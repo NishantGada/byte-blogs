@@ -1,37 +1,75 @@
 import React, { useContext } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import CreateBlog from "../CreateBlog/CreateBlog";
 import EditBlog from "../EditBlog/EditBlog";
 import ViewBlogs from "../ViewBlogs/ViewBlogs";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Spacer,
+  VStack,
+} from "@chakra-ui/react";
 
 const AdminDashboardPage: React.FC = () => {
   const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>Admin Dashboard</h2>
-      <nav style={{ marginBottom: "1rem" }}>
-        <Link to="/admin/create" style={{ marginRight: "1rem" }}>
-          Create Blog
-        </Link>
-        <Link to="/admin/view">View Blogs</Link>
-        <button
-          style={{ marginLeft: "2rem" }}
-          onClick={() => {
-            logout();
-          }}
+    <Box p={8} bg="white" minH="100vh">
+      {/* Header */}
+      <Flex align="center" mb={6}>
+        <Heading size="lg" color="black">
+          Admin Dashboard
+        </Heading>
+        <Spacer />
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          borderColor="black"
+          color="black"
+          _hover={{ bg: "black", color: "white" }}
         >
           Logout
-        </button>
-      </nav>
+        </Button>
+      </Flex>
 
-      <Routes>
-        <Route path="create" element={<CreateBlog />} />
-        <Route path="view" element={<ViewBlogs />} />
-        <Route path="edit/:id" element={<EditBlog />} />
-      </Routes>
-    </div>
+      {/* Nav Buttons */}
+      <Flex gap={4} mb={8}>
+        <Button
+          as={Link}
+          to="/admin/create"
+          colorScheme="gray"
+          variant="solid"
+        >
+          Create Blog
+        </Button>
+        <Button
+          as={Link}
+          to="/admin/view"
+          colorScheme="gray"
+          variant="solid"
+        >
+          View Blogs
+        </Button>
+      </Flex>
+
+      {/* Page Content */}
+      <Box border="1px solid #e6e6e6" borderRadius="md" p={6}>
+        <Routes>
+          <Route path="create" element={<CreateBlog />} />
+          <Route path="view" element={<ViewBlogs />} />
+          <Route path="edit/:id" element={<EditBlog />} />
+        </Routes>
+      </Box>
+    </Box>
   );
 };
 

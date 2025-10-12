@@ -1,9 +1,22 @@
-// ViewBlogs.tsx
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Table, Button, Container, Title, Stack } from '@mantine/core';
-import SendRequest from '../../api/SendRequest';
-import { AuthContext } from '../../context/AuthContext';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import SendRequest from "../../api/SendRequest";
+import {
+  Box,
+  Button,
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Spinner,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
 
 interface Blog {
   id: string;
@@ -23,13 +36,13 @@ const ViewBlogs: React.FC = () => {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const res = await SendRequest('/api/blogs', {}, 'GET', {
+      const res = await SendRequest("/api/blogs", {}, "GET", {
         Authorization: `Bearer ${token}`,
       });
       setBlogs(res.data);
     } catch (err) {
       console.error(err);
-      alert('Failed to fetch blogs.');
+      alert("Failed to fetch blogs.");
     } finally {
       setLoading(false);
     }
@@ -41,19 +54,18 @@ const ViewBlogs: React.FC = () => {
 
   // Delete blog
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm('Are you sure you want to delete this blog?');
+    const confirmed = window.confirm("Are you sure you want to delete this blog?");
     if (!confirmed) return;
 
     try {
-      await SendRequest(`/api/blogs/${id}`, {}, 'DELETE', {
+      await SendRequest(`/api/blogs/${id}`, {}, "DELETE", {
         Authorization: `Bearer ${token}`,
       });
-      alert('Blog deleted successfully!');
-      // Refresh list
+      alert("Blog deleted successfully!");
       setBlogs(blogs.filter((b) => b.id !== id));
     } catch (err) {
       console.error(err);
-      alert('Failed to delete blog.');
+      alert("Failed to delete blog.");
     }
   };
 
@@ -62,46 +74,61 @@ const ViewBlogs: React.FC = () => {
     navigate(`/admin/edit/${id}`);
   };
 
-  if (loading) return <div>Loading blogs...</div>;
+  if (loading)
+    return (
+      <Box textAlign="center" mt={8}>
+        <Spinner size="xl" />
+      </Box>
+    );
 
   return (
-    <Container size="sm" mt="xl">
-      <Title order={2} ta="center" mb="lg">
+    <Box p={6} bg="white" borderRadius="md" minH="60vh">
+      <Heading size="lg" textAlign="center" mb={6}>
         View Blogs
-      </Title>
+      </Heading>
 
       {blogs.length === 0 ? (
-        <div>No blogs available.</div>
+        <Text textAlign="center">No blogs available.</Text>
       ) : (
-        <Stack spacing="md">
-          <Table highlightOnHover>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+        <TableContainer>
+          <Table variant="simple" colorScheme="blackAlpha">
+            <Thead>
+              <Tr>
+                <Th>Title</Th>
+                <Th>Category</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
               {blogs.map((blog) => (
-                <tr key={blog.id}>
-                  <td>{blog.title}</td>
-                  <td>{blog.category}</td>
-                  <td>
-                    <Button size="xs" color="blue" onClick={() => handleEdit(blog.id)} mr={5}>
-                      Edit
-                    </Button>
-                    <Button size="xs" color="red" onClick={() => handleDelete(blog.id)}>
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
+                <Tr key={blog.id}>
+                  <Td>{blog.title}</Td>
+                  <Td>{blog.category}</Td>
+                  <Td>
+                    <VStack align="stretch" spacing={2}>
+                      <Button
+                        size="sm"
+                        colorScheme="gray"
+                        onClick={() => handleEdit(blog.id)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        colorScheme="gray"
+                        onClick={() => handleDelete(blog.id)}
+                      >
+                        Delete
+                      </Button>
+                    </VStack>
+                  </Td>
+                </Tr>
               ))}
-            </tbody>
+            </Tbody>
           </Table>
-        </Stack>
+        </TableContainer>
       )}
-    </Container>
+    </Box>
   );
 };
 
