@@ -51,9 +51,9 @@ const BlogListPage: React.FC = () => {
             _hover={{ shadow: "md", cursor: "pointer" }}
             onClick={() => navigate(`/blogs/${blog.id}`)}
           >
-            {blog.coverImage && (
+            {/* {blog.coverImage && (
               <Image src={blog.coverImage} alt={blog.title} mb={4} borderRadius="md" />
-            )}
+            )} */}
             <Heading as="h3" size="md" mb={2}>
               {blog.title}
             </Heading>
