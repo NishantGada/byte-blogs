@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import BlogListPage from './pages/BlogListPage/BlogListPage';
 import BlogDetailPage from './pages/BlogDetailPage/BlogDetailPage';
 import Navbar from './components/Navbar';
+import About from './pages/About/About';
 
 const App = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -29,6 +30,8 @@ const App = () => {
 
         <Route path="/blogs" element={<BlogListPage />} />
         <Route path="/blogs/:id" element={<BlogDetailPage />} />
+        
+        <Route path="/about" element={<About />} />
 
         {/* Admin routes */}
         <Route
