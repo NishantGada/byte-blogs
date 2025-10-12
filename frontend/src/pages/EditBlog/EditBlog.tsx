@@ -112,6 +112,14 @@ const EditBlog: React.FC = () => {
         >
           Update Blog
         </Button>
+        <Button
+          colorScheme="gray"
+          w="full"
+          onClick={() => navigate("/admin/view")}
+          isLoading={saving}
+        >
+          Cancel
+        </Button>
       </VStack>
     </Box>
   );
