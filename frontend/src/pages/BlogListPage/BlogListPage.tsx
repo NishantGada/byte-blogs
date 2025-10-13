@@ -1,18 +1,21 @@
 // src/pages/Public/BlogListPage.tsx
-import React, { useState, useEffect } from "react";
+import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, VStack, Image, Heading, Text, Button, SimpleGrid } from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
+import { formatDate } from "../../utils/FormatDate";
 
-interface Blog {
+export interface Blog {
   id: string;
   title: string;
   category: string;
+  createdAt: string;
+  updatedAt: string;
   coverImage?: string;
   content: string;
 }
 
-const BlogListPage: React.FC = () => {
+const BlogListPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -57,9 +60,14 @@ const BlogListPage: React.FC = () => {
             <Heading as="h3" size="md" mb={2}>
               {blog.title}
             </Heading>
-            <Text fontSize="sm" color="gray.500" mb={4}>
-              Category: {blog.category}
-            </Text>
+            <Box mb={4}>
+              <Text fontSize="sm" color="gray.500">
+                Category: {blog.category}
+              </Text>
+              <Text fontSize="sm" color="gray.500">
+                Updated: {formatDate(blog.updatedAt)}
+              </Text>
+            </Box>
             <Button size="sm" onClick={() => navigate(`/blogs/${blog.id}`)}>
               Read More
             </Button>
