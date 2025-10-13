@@ -1,19 +1,18 @@
-import React, { useContext } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import CreateBlog from "../CreateBlog/CreateBlog";
-import EditBlog from "../EditBlog/EditBlog";
-import ViewBlogs from "../ViewBlogs/ViewBlogs";
 import {
   Box,
   Button,
   Flex,
   Heading,
-  Spacer,
-  VStack,
+  Spacer
 } from "@chakra-ui/react";
+import { useContext } from "react";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import CreateBlog from "../CreateBlog/CreateBlog";
+import EditBlog from "../EditBlog/EditBlog";
+import ViewBlogs from "../ViewBlogs/ViewBlogs";
 
-const AdminDashboardPage: React.FC = () => {
+const AdminDashboardPage = () => {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -27,7 +26,7 @@ const AdminDashboardPage: React.FC = () => {
       {/* Header */}
       <Flex align="center" mb={6}>
         <Heading size="lg" color="black">
-          Admin Dashboard
+          Welcome, Nishant!
         </Heading>
         <Spacer />
         <Button
@@ -61,7 +60,6 @@ const AdminDashboardPage: React.FC = () => {
         </Button>
       </Flex>
 
-      {/* Page Content */}
       <Box border="1px solid #e6e6e6" borderRadius="md" p={6}>
         <Routes>
           <Route path="create" element={<CreateBlog />} />
