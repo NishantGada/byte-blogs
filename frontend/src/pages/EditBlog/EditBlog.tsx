@@ -1,12 +1,12 @@
 // EditBlog.tsx
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Box, Button, Heading, Input, Spinner, VStack } from "@chakra-ui/react";
 import { RichTextEditor } from "@mantine/rte";
-import { Box, Input, Button, Heading, VStack, Spinner } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 
-const EditBlog: React.FC = () => {
+const EditBlog = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
