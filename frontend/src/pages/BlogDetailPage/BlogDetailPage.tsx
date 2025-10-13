@@ -1,22 +1,16 @@
 // src/pages/Public/BlogDetailPage.tsx
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Box, Image, Heading, Text, Button, Container } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { FaLongArrowAltLeft } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
+import { formatDate } from "../../utils/FormatDate";
+import type { Blog } from "../BlogListPage/BlogListPage";
 
-interface Blog {
-  id: string;
-  title: string;
-  category: string;
-  coverImage?: string;
-  content: string;
-}
-
-const BlogDetailPage: React.FC = () => {
+const BlogDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -39,21 +33,35 @@ const BlogDetailPage: React.FC = () => {
 
   return (
     <Container maxW="container.md" p={{ base: 4, md: 8 }}>
+      <Box my={4}>
+        <Link to="/blogs">
+          <Flex alignItems="center" gap="2">
+            <FaLongArrowAltLeft />
+            <Text color="blue">back</Text>
+          </Flex>
+        </Link>
+      </Box>
+
       {blog.coverImage && (
         <Image src={blog.coverImage} alt={blog.title} mb={6} borderRadius="md" />
       )}
       <Heading as="h2" size="xl" mb={2}>
         {blog.title}
       </Heading>
-      <Text fontSize="sm" color="gray.500" mb={4}>
-        Category: {blog.category}
-      </Text>
+      <Box mb={4}>
+        <Text fontSize="sm" color="gray.500">
+          Category: {blog.category}
+        </Text>
+        <Text fontSize="sm" color="gray.500">
+          Created: {formatDate(blog.createdAt)} | Updated: {formatDate(blog.updatedAt)}
+        </Text>
+      </Box>
       <Box
         className="blog-content"
         dangerouslySetInnerHTML={{ __html: blog.content }}
         mb={6}
+        textAlign="justify"
       />
-      <Button onClick={() => navigate("/blogs")}>Back to All Blogs</Button>
     </Container>
   );
 };
