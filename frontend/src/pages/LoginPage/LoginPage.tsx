@@ -1,21 +1,20 @@
 // LoginPage.tsx
-import React, { useState, useContext } from 'react';
-import { AuthContext } from '../../context/AuthContext';
-import SendRequest from '../../api/SendRequest';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
-  Input,
   Heading,
-  Text,
-  VStack,
+  Input,
   Spinner,
-  useToast,
-  Flex,
+  VStack,
+  useToast
 } from '@chakra-ui/react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SendRequest from '../../api/SendRequest';
+import { AuthContext } from '../../context/AuthContext';
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext);
@@ -33,7 +32,7 @@ const LoginPage = () => {
     try {
       const response = await SendRequest('/api/auth/login', { username, password }, 'POST');
       login(response.data.token);
-      navigate('/admin');
+      navigate('/admin/view');
     } catch (err: any) {
       toast({
         title: 'Login failed',
