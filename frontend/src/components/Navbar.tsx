@@ -1,13 +1,14 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
-  Text,
   useColorMode,
 } from '@chakra-ui/react';
-import { FaLongArrowAltRight, FaMoon, FaSun } from "react-icons/fa";
-import { Link, useLocation } from 'react-router-dom';
+import { FiArrowRight, FiMoon, FiSun } from "react-icons/fi";
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const location = useLocation();
@@ -32,36 +33,35 @@ export default function Navbar() {
         alignItems="center"
         justify="space-between"
       >
-        <Link to="/blogs">
+        <RouterLink to="/blogs">
           <Heading size="md" letterSpacing="-0.01em">
             ByteBlogs
           </Heading>
-        </Link>
+        </RouterLink>
 
-        <Flex align="center" gap={4}>
+        <HStack spacing={2}>
           {location.pathname !== "/about" && (
-            <Link to="/about">
-              <Flex
-                alignItems="center"
-                gap={2}
-                color="text.muted"
-                _hover={{ color: "accent.solid" }}
-                transition="color 0.15s"
-              >
-                <Text fontSize="sm">about</Text>
-                <FaLongArrowAltRight />
-              </Flex>
-            </Link>
+            <Button
+              as={RouterLink}
+              to="/about"
+              variant="outline"
+              colorScheme="gray"
+              size="sm"
+              rightIcon={<FiArrowRight />}
+              fontWeight={500}
+            >
+              about
+            </Button>
           )}
           <IconButton
             aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-            icon={isDark ? <FaSun /> : <FaMoon />}
+            icon={isDark ? <FiSun /> : <FiMoon />}
             onClick={toggleColorMode}
-            variant="ghost"
+            variant="outline"
             colorScheme="gray"
             size="sm"
           />
-        </Flex>
+        </HStack>
       </Flex>
     </Box>
   );
