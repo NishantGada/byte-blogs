@@ -1,5 +1,5 @@
 // src/pages/Public/BlogDetailPage.tsx
-import { Box, Container, Flex, Heading, Image, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Image, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ const BlogDetailPage = () => {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
+  const toast = useToast();
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -23,15 +24,21 @@ const BlogDetailPage = () => {
       try {
         const res = await SendRequest(`/api/blogs/${id}`, {}, "GET");
         setBlog(res.data.Item || res.data);
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        alert("Failed to fetch blog details.");
+        toast({
+          title: "Failed to load blog",
+          description: err.response?.data?.message || "Please try again.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setLoading(false);
       }
     };
     fetchBlog();
-  }, [id]);
+  }, [id, toast]);
 
   const sanitizedContent = useMemo(
     () => (blog ? DOMPurify.sanitize(blog.content) : ""),

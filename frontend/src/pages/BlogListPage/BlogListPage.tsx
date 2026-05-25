@@ -1,5 +1,5 @@
 // src/pages/Public/BlogListPage.tsx
-import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, SimpleGrid, Text, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
@@ -19,15 +19,22 @@ const BlogListPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const fetchBlogs = async () => {
     try {
       setLoading(true);
       const res = await SendRequest("/api/blogs", {}, "GET");
       setBlogs(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to fetch blogs.");
+      toast({
+        title: "Failed to load blogs",
+        description: err.response?.data?.message || "Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }

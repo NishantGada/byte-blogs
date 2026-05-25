@@ -1,8 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import SendRequest from "../../api/SendRequest";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Heading,
@@ -16,6 +22,7 @@ import {
   Spinner,
   VStack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 
 interface Blog {
@@ -29,10 +36,13 @@ interface Blog {
 const ViewBlogs: React.FC = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const toast = useToast();
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
-  // Fetch all blogs
   const fetchBlogs = async () => {
     try {
       setLoading(true);
@@ -40,9 +50,15 @@ const ViewBlogs: React.FC = () => {
         Authorization: `Bearer ${token}`,
       });
       setBlogs(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to fetch blogs.");
+      toast({
+        title: "Failed to load blogs",
+        description: err.response?.data?.message || "Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -52,24 +68,35 @@ const ViewBlogs: React.FC = () => {
     fetchBlogs();
   }, []);
 
-  // Delete blog
-  const handleDelete = async (id: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete this blog?");
-    if (!confirmed) return;
-
+  const handleDeleteConfirm = async () => {
+    if (!pendingDeleteId) return;
+    setDeleting(true);
     try {
-      await SendRequest(`/api/blogs/${id}`, {}, "DELETE", {
+      await SendRequest(`/api/blogs/${pendingDeleteId}`, {}, "DELETE", {
         Authorization: `Bearer ${token}`,
       });
-      alert("Blog deleted successfully!");
-      setBlogs(blogs.filter((b) => b.id !== id));
-    } catch (err) {
+      toast({
+        title: "Blog deleted",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setBlogs(blogs.filter((b) => b.id !== pendingDeleteId));
+      setPendingDeleteId(null);
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to delete blog.");
+      toast({
+        title: "Failed to delete blog",
+        description: err.response?.data?.message || "Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setDeleting(false);
     }
   };
 
-  // Edit blog
   const handleEdit = (id: string) => {
     navigate(`/admin/edit/${id}`);
   };
@@ -116,7 +143,7 @@ const ViewBlogs: React.FC = () => {
                       <Button
                         size="sm"
                         colorScheme="gray"
-                        onClick={() => handleDelete(blog.id)}
+                        onClick={() => setPendingDeleteId(blog.id)}
                       >
                         Delete
                       </Button>
@@ -128,6 +155,36 @@ const ViewBlogs: React.FC = () => {
           </Table>
         </TableContainer>
       )}
+
+      <AlertDialog
+        isOpen={pendingDeleteId !== null}
+        leastDestructiveRef={cancelRef as React.RefObject<HTMLButtonElement>}
+        onClose={() => setPendingDeleteId(null)}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete blog
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure? This action cannot be undone.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={() => setPendingDeleteId(null)}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={handleDeleteConfirm}
+                isLoading={deleting}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

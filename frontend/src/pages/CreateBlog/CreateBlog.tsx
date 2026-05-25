@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Heading, Input, VStack, FormControl, FormLabel } from "@chakra-ui/react";
+import { Box, Button, Heading, Input, VStack, FormControl, FormLabel, useToast } from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 import BlogEditor from "../../components/BlogEditor/BlogEditor";
@@ -8,6 +8,7 @@ import BlogEditor from "../../components/BlogEditor/BlogEditor";
 const CreateBlog: React.FC = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -16,7 +17,13 @@ const CreateBlog: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!title || !category || !content) {
-      alert("Please fill all required fields.");
+      toast({
+        title: "Missing required fields",
+        description: "Title, category, and content are all required.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -27,11 +34,22 @@ const CreateBlog: React.FC = () => {
         "POST",
         { Authorization: `Bearer ${token}` }
       );
-      alert("Blog created successfully!");
+      toast({
+        title: "Blog created",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
       navigate("/admin");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to create blog.");
+      toast({
+        title: "Failed to create blog",
+        description: err.response?.data?.message || "Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

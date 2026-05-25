@@ -1,5 +1,5 @@
 // EditBlog.tsx
-import { Box, Button, Heading, Input, Spinner, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, Input, Spinner, VStack, useToast } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
@@ -10,6 +10,7 @@ const EditBlog = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const toast = useToast();
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -33,15 +34,27 @@ const EditBlog = () => {
         })
         .catch((err) => {
           console.error(err);
-          alert("Failed to fetch blog details");
+          toast({
+            title: "Failed to load blog",
+            description: err.response?.data?.message || "Please try again.",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
           setLoading(false);
         });
     }
-  }, [id, token]);
+  }, [id, token, toast]);
 
   const handleSubmit = async () => {
     if (!title || !content || !category) {
-      alert("Please fill in all required fields.");
+      toast({
+        title: "Missing required fields",
+        description: "Title, category, and content are all required.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -51,12 +64,23 @@ const EditBlog = () => {
         await SendRequest(`/api/blogs/${id}`, { title, category, coverImage, content }, "PUT", {
           Authorization: `Bearer ${token}`,
         });
-        alert("Blog updated successfully!");
+        toast({
+          title: "Blog updated",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
       navigate("/admin");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to update blog.");
+      toast({
+        title: "Failed to update blog",
+        description: err.response?.data?.message || "Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setSaving(false);
     }
