@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
+import '../CreateBlog/RTECustomCss.css';
 
 const EditBlog = () => {
   const { token } = useContext(AuthContext);

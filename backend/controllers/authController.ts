@@ -9,7 +9,6 @@ const TABLE_NAME = 'users';
 // POST /api/auth/login
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        console.log("inside AuthController");
         const { username, password } = req.body;
 
         // Fetch user from DynamoDB

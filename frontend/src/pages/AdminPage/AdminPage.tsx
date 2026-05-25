@@ -30,28 +30,26 @@ const AdminDashboardPage = () => {
           Welcome, Nishant!
         </Heading>
         <Spacer />
-        {
-          location.pathname !== "/admin/create" ?
-            <Button
-              as={Link}
-              to="/admin/create"
-              colorScheme="gray"
-              variant="solid"
-            >
-              Write a Blog
-            </Button> : <></>
-        }
-        {
-          location.pathname !== "/admin" ?
-            <Button
-              as={Link}
-              to="/admin"
-              colorScheme="gray"
-              variant="solid"
-            >
-              View Blogs
-            </Button> : <></>
-        }
+        {location.pathname !== "/admin/create" && (
+          <Button
+            as={Link}
+            to="/admin/create"
+            colorScheme="gray"
+            variant="solid"
+          >
+            Write a Blog
+          </Button>
+        )}
+        {location.pathname !== "/admin" && (
+          <Button
+            as={Link}
+            to="/admin"
+            colorScheme="gray"
+            variant="solid"
+          >
+            View Blogs
+          </Button>
+        )}
         <Button
           onClick={handleLogout}
           variant="outline"
@@ -62,28 +60,6 @@ const AdminDashboardPage = () => {
           Logout
         </Button>
       </Flex>
-
-      {/* Nav Buttons */}
-      {/* <Flex gap={4} mb={8}>
-        <Button
-          as={Link}
-          to="/admin/create"
-          colorScheme="gray"
-          variant="solid"
-        >
-          Create Blog
-        </Button>
-        {
-          location.pathname !== "/admin" ? <Button
-            as={Link}
-            to="/admin"
-            colorScheme="gray"
-            variant="solid"
-          >
-            View Blogs
-          </Button> : <></>
-        }
-      </Flex> */}
 
       <Box border="1px solid #e6e6e6" borderRadius="md" p={6}>
         <Routes>

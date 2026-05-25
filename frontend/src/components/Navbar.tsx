@@ -13,13 +13,13 @@ export default function Navbar() {
         <Heading size="md">ByteBlogs</Heading>
       </Link>
 
-      {
-        location.pathname !== "/about" ? <Link to="/about">
+      {location.pathname !== "/about" && (
+        <Link to="/about">
           <Flex alignItems="center" gap="2">
             about <FaLongArrowAltRight />
           </Flex>
-        </Link> : <></>
-      }
+        </Link>
+      )}
     </Flex>
   )
 }
