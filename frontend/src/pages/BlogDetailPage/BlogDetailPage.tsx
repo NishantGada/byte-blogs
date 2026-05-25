@@ -1,16 +1,21 @@
 // src/pages/Public/BlogDetailPage.tsx
 import { Box, Container, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { Link, useParams } from "react-router-dom";
+import DOMPurify from "dompurify";
+import hljs from "highlight.js/lib/common";
+import "highlight.js/styles/atom-one-dark.css";
 import SendRequest from "../../api/SendRequest";
 import { formatDate } from "../../utils/FormatDate";
 import type { Blog } from "../BlogListPage/BlogListPage";
+import "./BlogDetailPage.css";
 
 const BlogDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -27,6 +32,20 @@ const BlogDetailPage = () => {
     };
     fetchBlog();
   }, [id]);
+
+  const sanitizedContent = useMemo(
+    () => (blog ? DOMPurify.sanitize(blog.content) : ""),
+    [blog],
+  );
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+    contentRef.current
+      .querySelectorAll<HTMLElement>("pre code")
+      .forEach((block) => {
+        hljs.highlightElement(block);
+      });
+  }, [sanitizedContent]);
 
   if (loading) return <Text textAlign="center" mt="4">Loading blog...</Text>;
   if (!blog) return <Text textAlign="center" mt="4">Blog not found.</Text>;
@@ -57,10 +76,10 @@ const BlogDetailPage = () => {
         </Text>
       </Box>
       <Box
-        className="blog-content"
-        dangerouslySetInnerHTML={{ __html: blog.content }}
+        ref={contentRef}
+        className="blog-prose"
+        dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         mb={6}
-        textAlign="justify"
       />
     </Container>
   );

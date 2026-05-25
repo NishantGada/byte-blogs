@@ -22,6 +22,7 @@
     "@tiptap/react": "^3.23.6",
     "@tiptap/starter-kit": "^3.23.6",
     "axios": "^1.12.2",
+    "dompurify": "^3.4.5",
     "framer-motion": "^12.23.24",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
