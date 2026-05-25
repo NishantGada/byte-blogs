@@ -89,9 +89,17 @@ const BlogListPage = () => {
 
   if (blogs.length === 0) {
     return (
-      <Text textAlign="center" mt="4">
-        No blogs available.
-      </Text>
+      <Box
+        textAlign="center"
+        mt={{ base: 8, md: 16 }}
+        px={4}
+        color="gray.600"
+      >
+        <Heading as="h2" size="md" mb={2} color="gray.700">
+          No posts yet
+        </Heading>
+        <Text>Check back soon — there is nothing here right now.</Text>
+      </Box>
     );
   }
 

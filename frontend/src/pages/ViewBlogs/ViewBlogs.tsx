@@ -148,10 +148,18 @@ const ViewBlogs: React.FC = () => {
       </Flex>
 
       {blogs.length === 0 ? (
-        <Text textAlign="center">No blogs available.</Text>
+        <Box textAlign="center" py={{ base: 8, md: 12 }} px={4} color="gray.600">
+          <Heading as="h3" size="md" mb={2} color="gray.700">
+            No blogs yet
+          </Heading>
+          <Text mb={6}>Write your first post to get started.</Text>
+          <Button colorScheme="gray" onClick={() => navigate("/admin/create")}>
+            Write a Blog
+          </Button>
+        </Box>
       ) : visibleBlogs.length === 0 ? (
         <Text textAlign="center" color="gray.500">
-          No blogs match "{search}".
+          No blogs match the search.
         </Text>
       ) : (
         <TableContainer>

@@ -191,10 +191,11 @@ const EditBlog = () => {
           Update Blog
         </Button>
         <Button
+          variant="outline"
           colorScheme="gray"
           w="full"
-          onClick={() => navigate("/admin/view")}
-          isLoading={saving}
+          onClick={() => navigate("/admin")}
+          isDisabled={saving}
         >
           Cancel
         </Button>
