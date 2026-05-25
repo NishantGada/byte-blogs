@@ -4,6 +4,9 @@ import { Box, Button, Heading, Input, VStack, FormControl, FormLabel, useToast }
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 import BlogEditor from "../../components/BlogEditor/BlogEditor";
+import { useBlogDraft } from "../../hooks/useBlogDraft";
+
+const DRAFT_KEY = "bytes-blog-draft-new";
 
 const CreateBlog: React.FC = () => {
   const { token } = useContext(AuthContext);
@@ -14,6 +17,23 @@ const CreateBlog: React.FC = () => {
   const [category, setCategory] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [content, setContent] = useState("");
+
+  const { clearDraft } = useBlogDraft({
+    key: DRAFT_KEY,
+    values: { title, category, coverImage, content },
+    onRestore: (draft) => {
+      setTitle(draft.title);
+      setCategory(draft.category);
+      setCoverImage(draft.coverImage);
+      setContent(draft.content);
+      toast({
+        title: "Restored unsaved draft",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
 
   const handleSubmit = async () => {
     if (!title || !category || !content) {
@@ -34,6 +54,7 @@ const CreateBlog: React.FC = () => {
         "POST",
         { Authorization: `Bearer ${token}` }
       );
+      clearDraft();
       toast({
         title: "Blog created",
         status: "success",

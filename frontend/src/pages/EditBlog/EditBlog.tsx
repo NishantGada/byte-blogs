@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 import BlogEditor from "../../components/BlogEditor/BlogEditor";
+import { useBlogDraft } from "../../hooks/useBlogDraft";
 
 const EditBlog = () => {
   const { token } = useContext(AuthContext);
@@ -18,6 +19,24 @@ const EditBlog = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const { clearDraft } = useBlogDraft({
+    key: `bytes-blog-draft-${id ?? "unknown"}`,
+    values: { title, category, coverImage, content },
+    enabled: !loading && !!id,
+    onRestore: (draft) => {
+      setTitle(draft.title);
+      setCategory(draft.category);
+      setCoverImage(draft.coverImage);
+      setContent(draft.content);
+      toast({
+        title: "Restored unsaved draft",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
 
   useEffect(() => {
     if (id) {
@@ -64,6 +83,7 @@ const EditBlog = () => {
         await SendRequest(`/api/blogs/${id}`, { title, category, coverImage, content }, "PUT", {
           Authorization: `Bearer ${token}`,
         });
+        clearDraft();
         toast({
           title: "Blog updated",
           status: "success",
