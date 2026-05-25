@@ -1,11 +1,10 @@
 // EditBlog.tsx
 import { Box, Button, Heading, Input, Spinner, VStack } from "@chakra-ui/react";
-import { RichTextEditor } from "@mantine/rte";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
-import '../CreateBlog/RTECustomCss.css';
+import BlogEditor from "../../components/BlogEditor/BlogEditor";
 
 const EditBlog = () => {
   const { token } = useContext(AuthContext);
@@ -92,19 +91,7 @@ const EditBlog = () => {
           value={coverImage}
           onChange={(e) => setCoverImage(e.target.value)}
         />
-        <RichTextEditor
-          key={id}
-          value={content}
-          onChange={setContent}
-          style={{ minHeight: 400, width: "100%" }}
-          // controls={[
-          //   ["bold", "italic", "underline"],
-          //   ["h1", "h2", "h3"],
-          //   ["unorderedList", "orderedList"],
-          //   ["link", "image"],
-          //   ["alignLeft", "alignCenter", "alignRight"],
-          // ]}
-        />
+        <BlogEditor key={id} value={content} onChange={setContent} />
         <Button
           colorScheme="gray"
           w="full"

@@ -1,10 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { RichTextEditor } from "@mantine/rte";
 import { Box, Button, Heading, Input, VStack, FormControl, FormLabel } from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
-import './RTECustomCss.css';
+import BlogEditor from "../../components/BlogEditor/BlogEditor";
 
 const CreateBlog: React.FC = () => {
   const { token } = useContext(AuthContext);
@@ -72,11 +71,7 @@ const CreateBlog: React.FC = () => {
 
         <FormControl isRequired>
           <FormLabel>Content</FormLabel>
-          <RichTextEditor
-            value={content}
-            onChange={setContent}
-            style={{ minHeight: 400 }}
-          />
+          <BlogEditor value={content} onChange={setContent} />
         </FormControl>
 
         <Button colorScheme="gray" onClick={handleSubmit}>
