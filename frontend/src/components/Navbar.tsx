@@ -7,13 +7,23 @@ import {
   IconButton,
   useColorMode,
 } from '@chakra-ui/react';
-import { FiArrowRight, FiMoon, FiSun } from "react-icons/fi";
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useContext } from 'react';
+import { FiArrowRight, FiLogOut, FiMoon, FiSun } from "react-icons/fi";
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const { colorMode, toggleColorMode } = useColorMode();
   const isDark = colorMode === 'dark';
+  const showLogout = isAuthenticated && location.pathname.startsWith('/admin');
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <Box
@@ -51,6 +61,18 @@ export default function Navbar() {
               fontWeight={500}
             >
               about
+            </Button>
+          )}
+          {showLogout && (
+            <Button
+              variant="outline"
+              colorScheme="gray"
+              size="sm"
+              leftIcon={<FiLogOut />}
+              onClick={handleLogout}
+              fontWeight={500}
+            >
+              logout
             </Button>
           )}
           <IconButton

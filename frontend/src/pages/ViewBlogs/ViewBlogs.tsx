@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import SendRequest from "../../api/SendRequest";
 import { formatDate } from "../../utils/FormatDate";
@@ -18,6 +18,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Link as ChakraLink,
   Table,
   Thead,
   Tbody,
@@ -29,7 +30,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
+import { FiSearch } from "react-icons/fi";
 
 interface Blog {
   id: string;
@@ -137,7 +138,7 @@ const ViewBlogs: React.FC = () => {
         <Heading size="lg">Your Blogs</Heading>
         <InputGroup maxW={{ base: "100%", md: "320px" }}>
           <InputLeftElement pointerEvents="none" color="text.subtle">
-            <FaSearch />
+            <FiSearch />
           </InputLeftElement>
           <Input
             placeholder="Search by title"
@@ -175,22 +176,20 @@ const ViewBlogs: React.FC = () => {
             <Tbody>
               {visibleBlogs.map((blog) => (
                 <Tr key={blog.id} _hover={{ bg: "bg.muted" }}>
-                  <Td fontWeight={500}>{blog.title}</Td>
+                  <Td fontWeight={500}>
+                    <ChakraLink
+                      as={RouterLink}
+                      to={`/admin/edit/${blog.id}`}
+                      color="text.primary"
+                      _hover={{ color: "accent.solid", textDecoration: "none" }}
+                    >
+                      {blog.title}
+                    </ChakraLink>
+                  </Td>
                   <Td color="text.muted">{blog.category}</Td>
                   <Td color="text.muted">{formatDate(blog.updatedAt)}</Td>
                   <Td>
                     <HStack spacing={2}>
-                      <Button
-                        as="a"
-                        href={`/blogs/${blog.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        size="sm"
-                        variant="ghost"
-                        colorScheme="gray"
-                      >
-                        View
-                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
@@ -201,8 +200,8 @@ const ViewBlogs: React.FC = () => {
                       </Button>
                       <Button
                         size="sm"
+                        variant="outline"
                         colorScheme="red"
-                        variant="ghost"
                         onClick={() => setPendingDeleteId(blog.id)}
                       >
                         Delete
