@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import SendRequest from "../../api/SendRequest";
+import { formatDate } from "../../utils/FormatDate";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +12,12 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
+  Flex,
+  HStack,
   Heading,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Table,
   Thead,
   Tbody,
@@ -20,15 +26,17 @@ import {
   Td,
   TableContainer,
   Spinner,
-  VStack,
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
 
 interface Blog {
   id: string;
   title: string;
   category: string;
+  createdAt: string;
+  updatedAt: string;
   coverImage?: string;
   content: string;
 }
@@ -41,7 +49,16 @@ const ViewBlogs: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [search, setSearch] = useState("");
   const cancelRef = useRef<HTMLButtonElement>(null);
+
+  const visibleBlogs = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const filtered = query
+      ? blogs.filter((b) => b.title.toLowerCase().includes(query))
+      : blogs;
+    return [...filtered].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  }, [blogs, search]);
 
   const fetchBlogs = async () => {
     try {
@@ -110,12 +127,32 @@ const ViewBlogs: React.FC = () => {
 
   return (
     <Box p={6} bg="white" borderRadius="md" minH="60vh">
-      <Heading size="lg" textAlign="left" mb={8}>
-        Your Blogs
-      </Heading>
+      <Flex
+        align={{ base: "stretch", md: "center" }}
+        justify="space-between"
+        direction={{ base: "column", md: "row" }}
+        gap={4}
+        mb={6}
+      >
+        <Heading size="lg">Your Blogs</Heading>
+        <InputGroup maxW={{ base: "100%", md: "320px" }}>
+          <InputLeftElement pointerEvents="none">
+            <FaSearch color="#A0AEC0" />
+          </InputLeftElement>
+          <Input
+            placeholder="Search by title"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </InputGroup>
+      </Flex>
 
       {blogs.length === 0 ? (
         <Text textAlign="center">No blogs available.</Text>
+      ) : visibleBlogs.length === 0 ? (
+        <Text textAlign="center" color="gray.500">
+          No blogs match "{search}".
+        </Text>
       ) : (
         <TableContainer>
           <Table variant="simple" colorScheme="blackAlpha">
@@ -123,16 +160,29 @@ const ViewBlogs: React.FC = () => {
               <Tr>
                 <Th>Title</Th>
                 <Th>Category</Th>
+                <Th>Updated</Th>
                 <Th>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {blogs.map((blog) => (
+              {visibleBlogs.map((blog) => (
                 <Tr key={blog.id}>
                   <Td>{blog.title}</Td>
                   <Td>{blog.category}</Td>
+                  <Td>{formatDate(blog.updatedAt)}</Td>
                   <Td>
-                    <VStack align="stretch" spacing={2}>
+                    <HStack spacing={2}>
+                      <Button
+                        as="a"
+                        href={`/blogs/${blog.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="sm"
+                        colorScheme="gray"
+                        variant="outline"
+                      >
+                        View
+                      </Button>
                       <Button
                         size="sm"
                         colorScheme="gray"
@@ -142,12 +192,13 @@ const ViewBlogs: React.FC = () => {
                       </Button>
                       <Button
                         size="sm"
-                        colorScheme="gray"
+                        colorScheme="red"
+                        variant="outline"
                         onClick={() => setPendingDeleteId(blog.id)}
                       >
                         Delete
                       </Button>
-                    </VStack>
+                    </HStack>
                   </Td>
                 </Tr>
               ))}
