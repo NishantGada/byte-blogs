@@ -7,7 +7,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  Spinner,
   VStack,
   useToast
 } from '@chakra-ui/react';
@@ -47,27 +46,28 @@ const LoginPage = () => {
   };
 
   return (
-    <Flex minHeight="100vh" align="center" justify="center" bg="white">
+    <Flex minHeight="100vh" align="center" justify="center" px={4} bg="bg.canvas">
       <Box
         width="100%"
         maxW="400px"
-        border="1px solid black"
-        borderRadius="md"
-        p={8}
-        boxShadow="lg"
+        bg="bg.surface"
+        borderWidth="1px"
+        borderColor="border.default"
+        borderRadius="lg"
+        p={{ base: 6, md: 8 }}
+        boxShadow="sm"
       >
-        <Heading mb={6} textAlign="center" fontWeight="bold" color="black">
+        <Heading mb={6} textAlign="center" size="lg">
           Admin Login
         </Heading>
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
             <FormControl>
-              <FormLabel color="black">Username</FormLabel>
+              <FormLabel color="text.muted" fontSize="sm">
+                Username
+              </FormLabel>
               <Input
-                borderColor="black"
-                _hover={{ borderColor: 'gray.600' }}
-                _focus={{ borderColor: 'black', boxShadow: 'none' }}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -75,27 +75,19 @@ const LoginPage = () => {
             </FormControl>
 
             <FormControl>
-              <FormLabel color="black">Password</FormLabel>
+              <FormLabel color="text.muted" fontSize="sm">
+                Password
+              </FormLabel>
               <Input
                 type="password"
-                borderColor="black"
-                _hover={{ borderColor: 'gray.600' }}
-                _focus={{ borderColor: 'black', boxShadow: 'none' }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </FormControl>
 
-            <Button
-              type="submit"
-              bg="black"
-              color="white"
-              _hover={{ bg: 'gray.800' }}
-              width="full"
-              disabled={loading}
-            >
-              {loading ? <Spinner size="sm" /> : 'Login'}
+            <Button type="submit" width="full" isLoading={loading}>
+              Login
             </Button>
           </VStack>
         </form>

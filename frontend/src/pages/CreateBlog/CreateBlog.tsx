@@ -6,6 +6,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  HStack,
   Heading,
   Input,
   SimpleGrid,
@@ -91,25 +92,23 @@ const CreateBlog: React.FC = () => {
 
   return (
     <Box
-      border="none"
       maxW={
         showPreview
-          ? { base: "95%", md: "95%", lg: "1200px" }
-          : { base: "90%", md: "600px", lg: "70%" }
+          ? { base: "100%", lg: "1200px" }
+          : { base: "100%", md: "600px", lg: "70%" }
       }
       mx="auto"
       mb={8}
-      bg="white"
-      borderRadius="md"
-      boxShadow="sm"
     >
-      <Heading size="lg" textAlign="center" mb={6}>
+      <Heading size="lg" textAlign="center" mb={8}>
         Create New Blog
       </Heading>
 
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={5} align="stretch">
         <FormControl isRequired>
-          <FormLabel>Title</FormLabel>
+          <FormLabel color="text.muted" fontSize="sm">
+            Title
+          </FormLabel>
           <Input
             placeholder="Enter blog title"
             value={title}
@@ -118,7 +117,9 @@ const CreateBlog: React.FC = () => {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel>Category</FormLabel>
+          <FormLabel color="text.muted" fontSize="sm">
+            Category
+          </FormLabel>
           <Input
             placeholder="Enter blog category"
             value={category}
@@ -127,7 +128,9 @@ const CreateBlog: React.FC = () => {
         </FormControl>
 
         <FormControl>
-          <FormLabel>Cover Image URL</FormLabel>
+          <FormLabel color="text.muted" fontSize="sm">
+            Cover Image URL
+          </FormLabel>
           <Input
             placeholder="Enter cover image URL"
             value={coverImage}
@@ -137,9 +140,11 @@ const CreateBlog: React.FC = () => {
 
         <FormControl isRequired>
           <Flex justify="space-between" align="center" mb={2}>
-            <FormLabel mb={0}>Content</FormLabel>
+            <FormLabel mb={0} color="text.muted" fontSize="sm">
+              Content
+            </FormLabel>
             <Flex align="center" gap={2}>
-              <Text fontSize="sm" color="gray.600">
+              <Text fontSize="sm" color="text.muted">
                 Preview
               </Text>
               <Switch
@@ -153,9 +158,10 @@ const CreateBlog: React.FC = () => {
               <BlogEditor value={content} onChange={setContent} />
               <Box
                 borderWidth="1px"
+                borderColor="border.default"
                 borderRadius="md"
                 p={5}
-                bg="white"
+                bg="bg.surface"
                 overflowY="auto"
                 maxH="600px"
               >
@@ -167,9 +173,18 @@ const CreateBlog: React.FC = () => {
           )}
         </FormControl>
 
-        <Button colorScheme="gray" onClick={handleSubmit}>
-          Create Blog
-        </Button>
+        <HStack spacing={3} justify="flex-end">
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => navigate("/admin")}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} px={8}>
+            Create Blog
+          </Button>
+        </HStack>
       </VStack>
     </Box>
   );

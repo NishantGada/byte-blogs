@@ -1,5 +1,6 @@
 // src/pages/Public/BlogDetailPage.tsx
 import {
+  Badge,
   Box,
   Container,
   Flex,
@@ -56,41 +57,110 @@ const BlogDetailPage = () => {
     [blog],
   );
 
-  if (loading) return <Text textAlign="center" mt="4">Loading blog...</Text>;
-  if (!blog) return <Text textAlign="center" mt="4">Blog not found.</Text>;
+  if (loading) return <Text textAlign="center" mt={8} color="text.muted">Loading blog...</Text>;
+  if (!blog) return <Text textAlign="center" mt={8} color="text.muted">Blog not found.</Text>;
 
   return (
-    <Container maxW={{ base: "container.md", lg: "container.xl" }} p={{ base: 4, md: 8 }}>
-      <Box my={4}>
+    <Container maxW="1200px" py={{ base: 6, md: 10 }} px={{ base: 4, md: 8 }}>
+      <Box mb={6}>
         <Link to="/blogs">
-          <Flex alignItems="center" gap="2">
+          <Flex
+            alignItems="center"
+            gap={2}
+            color="text.muted"
+            _hover={{ color: "accent.solid" }}
+            transition="color 0.15s"
+            display="inline-flex"
+          >
             <FaLongArrowAltLeft />
-            <Text color="blue">back</Text>
+            <Text fontSize="sm">back to all posts</Text>
           </Flex>
         </Link>
       </Box>
 
-      <Flex gap={8} align="flex-start">
-        <Box flex="1" maxW={{ base: "100%", lg: "768px" }}>
+      <Flex gap={10} align="flex-start">
+        <Box flex="1" maxW={{ base: "100%", lg: "760px" }}>
           {blog.coverImage && (
-            <Image src={blog.coverImage} alt={blog.title} mb={6} borderRadius="md" />
+            <Image
+              src={blog.coverImage}
+              alt={blog.title}
+              mb={8}
+              borderRadius="lg"
+              borderWidth="1px"
+              borderColor="border.default"
+            />
           )}
-          <Heading as="h2" size="xl" mb={2}>
+          <Heading as="h1" size="2xl" mb={4} lineHeight="1.15">
             {blog.title}
           </Heading>
-          <Box mb={4}>
-            <Text fontSize="sm" color="gray.500">
-              Category: {blog.category}
-            </Text>
-            <Text fontSize="sm" color="gray.500">
-              Created: {formatDate(blog.createdAt)} | Updated: {formatDate(blog.updatedAt)}
-            </Text>
+          <Flex
+            mb={8}
+            gap={3}
+            wrap="wrap"
+            align="center"
+            color="text.subtle"
+            fontSize="sm"
+          >
+            <Badge bg="accent.subtle" color="accent.hover" textTransform="none">
+              {blog.category}
+            </Badge>
+            <Text>{formatDate(blog.createdAt)}</Text>
             {readingMinutes > 0 && (
-              <Text fontSize="sm" color="gray.500">
-                {readingMinutes} min read
-              </Text>
+              <>
+                <Text aria-hidden>·</Text>
+                <Text>{readingMinutes} min read</Text>
+              </>
             )}
-          </Box>
+          </Flex>
+
+          {headings.length > 0 && (
+            <Box
+              as="details"
+              display={{ base: "block", lg: "none" }}
+              mb={8}
+              borderWidth="1px"
+              borderColor="border.default"
+              borderRadius="md"
+              bg="bg.surface"
+            >
+              <Box
+                as="summary"
+                cursor="pointer"
+                px={4}
+                py={3}
+                fontSize="sm"
+                fontWeight={600}
+                color="text.muted"
+                _hover={{ color: "text.primary" }}
+              >
+                On this page
+              </Box>
+              <VStack
+                as="nav"
+                align="stretch"
+                spacing={2}
+                px={4}
+                pb={4}
+                borderTopWidth="1px"
+                borderColor="border.default"
+                pt={3}
+              >
+                {headings.map((h) => (
+                  <ChakraLink
+                    key={h.id}
+                    href={`#${h.id}`}
+                    fontSize="sm"
+                    color="text.muted"
+                    pl={h.level === 3 ? 4 : 0}
+                    _hover={{ color: "accent.solid", textDecoration: "none" }}
+                  >
+                    {h.text}
+                  </ChakraLink>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
           <BlogContent html={blog.content} mb={6} />
         </Box>
 
@@ -100,13 +170,13 @@ const BlogDetailPage = () => {
             width="240px"
             flexShrink={0}
           >
-            <Box position="sticky" top="20px">
+            <Box position="sticky" top="24px">
               <Text
                 fontSize="xs"
-                fontWeight="bold"
-                color="gray.500"
+                fontWeight={600}
+                color="text.subtle"
                 textTransform="uppercase"
-                letterSpacing="wider"
+                letterSpacing="0.08em"
                 mb={3}
               >
                 On this page
@@ -117,9 +187,9 @@ const BlogDetailPage = () => {
                     key={h.id}
                     href={`#${h.id}`}
                     fontSize="sm"
-                    color="gray.700"
-                    pl={h.level === 3 ? 3 : 0}
-                    _hover={{ color: "blue.600", textDecoration: "none" }}
+                    color="text.muted"
+                    pl={h.level === 3 ? 4 : 0}
+                    _hover={{ color: "accent.solid", textDecoration: "none" }}
                   >
                     {h.text}
                   </ChakraLink>

@@ -126,7 +126,7 @@ const ViewBlogs: React.FC = () => {
     );
 
   return (
-    <Box p={6} bg="white" borderRadius="md" minH="60vh">
+    <Box minH="60vh">
       <Flex
         align={{ base: "stretch", md: "center" }}
         justify="space-between"
@@ -136,8 +136,8 @@ const ViewBlogs: React.FC = () => {
       >
         <Heading size="lg">Your Blogs</Heading>
         <InputGroup maxW={{ base: "100%", md: "320px" }}>
-          <InputLeftElement pointerEvents="none">
-            <FaSearch color="#A0AEC0" />
+          <InputLeftElement pointerEvents="none" color="text.subtle">
+            <FaSearch />
           </InputLeftElement>
           <Input
             placeholder="Search by title"
@@ -148,36 +148,36 @@ const ViewBlogs: React.FC = () => {
       </Flex>
 
       {blogs.length === 0 ? (
-        <Box textAlign="center" py={{ base: 8, md: 12 }} px={4} color="gray.600">
-          <Heading as="h3" size="md" mb={2} color="gray.700">
+        <Box textAlign="center" py={{ base: 10, md: 16 }} px={4} color="text.muted">
+          <Heading as="h3" size="md" mb={2} color="text.primary">
             No blogs yet
           </Heading>
           <Text mb={6}>Write your first post to get started.</Text>
-          <Button colorScheme="gray" onClick={() => navigate("/admin/create")}>
+          <Button onClick={() => navigate("/admin/create")} px={8}>
             Write a Blog
           </Button>
         </Box>
       ) : visibleBlogs.length === 0 ? (
-        <Text textAlign="center" color="gray.500">
+        <Text textAlign="center" color="text.subtle" py={8}>
           No blogs match the search.
         </Text>
       ) : (
         <TableContainer>
-          <Table variant="simple" colorScheme="blackAlpha">
+          <Table variant="simple">
             <Thead>
               <Tr>
-                <Th>Title</Th>
-                <Th>Category</Th>
-                <Th>Updated</Th>
-                <Th>Actions</Th>
+                <Th color="text.subtle">Title</Th>
+                <Th color="text.subtle">Category</Th>
+                <Th color="text.subtle">Updated</Th>
+                <Th color="text.subtle">Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
               {visibleBlogs.map((blog) => (
-                <Tr key={blog.id}>
-                  <Td>{blog.title}</Td>
-                  <Td>{blog.category}</Td>
-                  <Td>{formatDate(blog.updatedAt)}</Td>
+                <Tr key={blog.id} _hover={{ bg: "bg.muted" }}>
+                  <Td fontWeight={500}>{blog.title}</Td>
+                  <Td color="text.muted">{blog.category}</Td>
+                  <Td color="text.muted">{formatDate(blog.updatedAt)}</Td>
                   <Td>
                     <HStack spacing={2}>
                       <Button
@@ -186,13 +186,14 @@ const ViewBlogs: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         size="sm"
+                        variant="ghost"
                         colorScheme="gray"
-                        variant="outline"
                       >
                         View
                       </Button>
                       <Button
                         size="sm"
+                        variant="outline"
                         colorScheme="gray"
                         onClick={() => handleEdit(blog.id)}
                       >
@@ -201,7 +202,7 @@ const ViewBlogs: React.FC = () => {
                       <Button
                         size="sm"
                         colorScheme="red"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => setPendingDeleteId(blog.id)}
                       >
                         Delete
@@ -222,14 +223,19 @@ const ViewBlogs: React.FC = () => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            <AlertDialogHeader fontSize="lg" fontWeight={600}>
               Delete blog
             </AlertDialogHeader>
-            <AlertDialogBody>
+            <AlertDialogBody color="text.muted">
               Are you sure? This action cannot be undone.
             </AlertDialogBody>
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setPendingDeleteId(null)}>
+              <Button
+                ref={cancelRef}
+                variant="ghost"
+                colorScheme="gray"
+                onClick={() => setPendingDeleteId(null)}
+              >
                 Cancel
               </Button>
               <Button

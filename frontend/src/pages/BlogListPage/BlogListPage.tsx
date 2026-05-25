@@ -3,6 +3,7 @@ import {
   AspectRatio,
   Badge,
   Box,
+  Container,
   Heading,
   Image,
   SimpleGrid,
@@ -68,10 +69,17 @@ const BlogListPage = () => {
 
   if (loading) {
     return (
-      <Box p={{ base: 4, md: 8 }}>
+      <Container maxW="1200px" py={{ base: 6, md: 10 }} px={{ base: 4, md: 8 }}>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
           {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-            <Box key={i} borderWidth="1px" borderRadius="lg" overflow="hidden">
+            <Box
+              key={i}
+              borderWidth="1px"
+              borderColor="border.default"
+              borderRadius="lg"
+              overflow="hidden"
+              bg="bg.surface"
+            >
               <AspectRatio ratio={16 / 9}>
                 <Skeleton w="full" h="full" />
               </AspectRatio>
@@ -83,28 +91,25 @@ const BlogListPage = () => {
             </Box>
           ))}
         </SimpleGrid>
-      </Box>
+      </Container>
     );
   }
 
   if (blogs.length === 0) {
     return (
-      <Box
-        textAlign="center"
-        mt={{ base: 8, md: 16 }}
-        px={4}
-        color="gray.600"
-      >
-        <Heading as="h2" size="md" mb={2} color="gray.700">
+      <Container maxW="600px" textAlign="center" mt={{ base: 12, md: 20 }} px={4}>
+        <Heading as="h2" size="md" mb={2} color="text.primary">
           No posts yet
         </Heading>
-        <Text>Check back soon — there is nothing here right now.</Text>
-      </Box>
+        <Text color="text.muted">
+          Check back soon — there is nothing here right now.
+        </Text>
+      </Container>
     );
   }
 
   return (
-    <Box p={{ base: 4, md: 8 }}>
+    <Container maxW="1200px" py={{ base: 6, md: 10 }} px={{ base: 4, md: 8 }}>
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
         {blogs.map((blog) => (
           <Box
@@ -112,14 +117,16 @@ const BlogListPage = () => {
             as={RouterLink}
             to={`/blogs/${blog.id}`}
             borderWidth="1px"
+            borderColor="border.default"
             borderRadius="lg"
             overflow="hidden"
-            bg="white"
+            bg="bg.surface"
             textDecoration="none"
-            transition="transform 0.15s, box-shadow 0.15s"
+            transition="transform 0.15s, box-shadow 0.15s, border-color 0.15s"
             _hover={{
               transform: "translateY(-2px)",
               shadow: "md",
+              borderColor: "accent.muted",
               textDecoration: "none",
             }}
           >
@@ -135,7 +142,8 @@ const BlogListPage = () => {
             <VStack p={5} align="stretch" spacing={3}>
               <Badge
                 alignSelf="flex-start"
-                colorScheme="gray"
+                bg="accent.subtle"
+                color="accent.hover"
                 textTransform="none"
               >
                 {blog.category}
@@ -143,17 +151,17 @@ const BlogListPage = () => {
               <Heading as="h3" size="md" noOfLines={2}>
                 {blog.title}
               </Heading>
-              <Text color="gray.600" fontSize="sm" noOfLines={3}>
+              <Text color="text.muted" fontSize="sm" noOfLines={3}>
                 {makeExcerpt(blog.content)}
               </Text>
-              <Text fontSize="xs" color="gray.500" pt={1}>
+              <Text fontSize="xs" color="text.subtle" pt={1}>
                 Updated {formatDate(blog.updatedAt)}
               </Text>
             </VStack>
           </Box>
         ))}
       </SimpleGrid>
-    </Box>
+    </Container>
   );
 };
 

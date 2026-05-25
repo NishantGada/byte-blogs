@@ -41,14 +41,15 @@
 }
 
 .tiptap blockquote {
-  border-left: 3px solid #cbd5e0;
+  border-left: 3px solid var(--chakra-colors-accent-muted);
   padding-left: 1rem;
-  color: #4a5568;
+  color: var(--chakra-colors-warmGray-600);
   font-style: italic;
 }
 
 .tiptap code {
-  background: #edf2f7;
+  background: var(--chakra-colors-warmGray-100);
+  color: var(--chakra-colors-warmGray-800);
   padding: 0.1em 0.3em;
   border-radius: 0.25em;
   font-size: 0.9em;
@@ -81,13 +82,13 @@
 }
 
 .tiptap a {
-  color: #3182ce;
+  color: var(--chakra-colors-sage-600);
   text-decoration: underline;
   cursor: pointer;
 }
 
 .tiptap p.is-editor-empty:first-child::before {
-  color: #a0aec0;
+  color: var(--chakra-colors-text-subtle);
   content: attr(data-placeholder);
   float: left;
   height: 0;

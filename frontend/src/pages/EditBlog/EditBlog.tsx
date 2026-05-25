@@ -3,7 +3,10 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
+  HStack,
   Input,
   SimpleGrid,
   Spinner,
@@ -132,73 +135,92 @@ const EditBlog = () => {
     <Box
       maxW={
         showPreview
-          ? { base: "95%", md: "95%", lg: "1200px" }
-          : { base: "90%", md: "600px", lg: "70%" }
+          ? { base: "100%", lg: "1200px" }
+          : { base: "100%", md: "600px", lg: "70%" }
       }
       mx="auto"
     >
-      <Heading as="h2" size="lg" textAlign="center" mb={6}>
+      <Heading as="h2" size="lg" textAlign="center" mb={8}>
         Edit Blog
       </Heading>
-      <VStack spacing={4} align="stretch">
-        <Input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <Input
-          placeholder="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-        <Input
-          placeholder="Cover Image URL"
-          value={coverImage}
-          onChange={(e) => setCoverImage(e.target.value)}
-        />
-        <Flex justify="flex-end" align="center" gap={2}>
-          <Text fontSize="sm" color="gray.600">
-            Preview
-          </Text>
-          <Switch
-            isChecked={showPreview}
-            onChange={(e) => setShowPreview(e.target.checked)}
+      <VStack spacing={5} align="stretch">
+        <FormControl>
+          <FormLabel color="text.muted" fontSize="sm">
+            Title
+          </FormLabel>
+          <Input
+            placeholder="Enter blog title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
-        </Flex>
-        {showPreview ? (
-          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
+        </FormControl>
+        <FormControl>
+          <FormLabel color="text.muted" fontSize="sm">
+            Category
+          </FormLabel>
+          <Input
+            placeholder="Enter blog category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel color="text.muted" fontSize="sm">
+            Cover Image URL
+          </FormLabel>
+          <Input
+            placeholder="Enter cover image URL"
+            value={coverImage}
+            onChange={(e) => setCoverImage(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <Flex justify="space-between" align="center" mb={2}>
+            <FormLabel mb={0} color="text.muted" fontSize="sm">
+              Content
+            </FormLabel>
+            <Flex align="center" gap={2}>
+              <Text fontSize="sm" color="text.muted">
+                Preview
+              </Text>
+              <Switch
+                isChecked={showPreview}
+                onChange={(e) => setShowPreview(e.target.checked)}
+              />
+            </Flex>
+          </Flex>
+          {showPreview ? (
+            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
+              <BlogEditor key={id} value={content} onChange={setContent} />
+              <Box
+                borderWidth="1px"
+                borderColor="border.default"
+                borderRadius="md"
+                p={5}
+                bg="bg.surface"
+                overflowY="auto"
+                maxH="600px"
+              >
+                <BlogContent html={content} />
+              </Box>
+            </SimpleGrid>
+          ) : (
             <BlogEditor key={id} value={content} onChange={setContent} />
-            <Box
-              borderWidth="1px"
-              borderRadius="md"
-              p={5}
-              bg="white"
-              overflowY="auto"
-              maxH="600px"
-            >
-              <BlogContent html={content} />
-            </Box>
-          </SimpleGrid>
-        ) : (
-          <BlogEditor key={id} value={content} onChange={setContent} />
-        )}
-        <Button
-          colorScheme="gray"
-          w="full"
-          onClick={handleSubmit}
-          isLoading={saving}
-        >
-          Update Blog
-        </Button>
-        <Button
-          variant="outline"
-          colorScheme="gray"
-          w="full"
-          onClick={() => navigate("/admin")}
-          isDisabled={saving}
-        >
-          Cancel
-        </Button>
+          )}
+        </FormControl>
+        <HStack spacing={3} justify="flex-end">
+          <Button
+            variant="outline"
+            colorScheme="gray"
+            onClick={() => navigate("/admin")}
+            isDisabled={saving}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} isLoading={saving} px={8}>
+            Update Blog
+          </Button>
+        </HStack>
       </VStack>
     </Box>
   );

@@ -37,12 +37,19 @@ export function useBlogDraft({
     if (!raw) return;
     try {
       const draft = JSON.parse(raw) as Partial<BlogDraft>;
-      onRestoreRef.current({
+      const restored: BlogDraft = {
         title: draft.title ?? "",
         category: draft.category ?? "",
         coverImage: draft.coverImage ?? "",
         content: draft.content ?? "",
-      });
+      };
+      const isEmpty =
+        !restored.title &&
+        !restored.category &&
+        !restored.coverImage &&
+        !restored.content;
+      if (isEmpty) return;
+      onRestoreRef.current(restored);
     } catch {
       // ignore corrupt drafts
     }

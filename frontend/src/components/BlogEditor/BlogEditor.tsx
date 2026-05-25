@@ -78,7 +78,14 @@ const BlogEditor = ({ value, onChange, placeholder }: BlogEditorProps) => {
   if (!editor) return null;
 
   return (
-    <Box borderWidth="1px" borderRadius="md" overflow="hidden" w="full" bg="white">
+    <Box
+      borderWidth="1px"
+      borderColor="border.default"
+      borderRadius="md"
+      overflow="hidden"
+      w="full"
+      bg="bg.surface"
+    >
       <Toolbar editor={editor} />
       <EditorContent editor={editor} />
     </Box>
@@ -146,11 +153,12 @@ const Toolbar = ({ editor }: ToolbarProps) => {
   return (
     <Flex
       borderBottomWidth="1px"
+      borderColor="border.default"
       p={2}
       gap={2}
       flexWrap="wrap"
       align="center"
-      bg="gray.50"
+      bg="bg.muted"
     >
       <ButtonGroup size="sm" spacing={0}>
         {btn('Bold', <FaBold />, () => editor.chain().focus().toggleBold().run(), editor.isActive('bold'))}
