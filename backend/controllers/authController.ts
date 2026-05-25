@@ -34,7 +34,8 @@ router.post('/login', async (req: Request, res: Response) => {
 
         res.json({ token });
     } catch (error) {
-        res.status(500).json({ message: 'Login failed', error });
+        console.error(error);
+        res.status(500).json({ message: 'Login failed' });
     }
 });
 
@@ -84,7 +85,7 @@ router.post('/register', async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Registration failed', error });
+        res.status(500).json({ message: 'Registration failed' });
     }
 });
 
@@ -142,7 +143,7 @@ router.post('/change-password', async (req: Request, res: Response) => {
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({ message: 'Token expired, please login again' });
         }
-        res.status(500).json({ message: 'Failed to update password', error });
+        res.status(500).json({ message: 'Failed to update password' });
     }
 });
 
