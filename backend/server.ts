@@ -17,8 +17,8 @@ app.get('/', (_req, res) => {
     console.log("calling root api");
     res.send('Blog API running...')
 });
-app.use('/api/blogs', blogRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api', blogRoutes);
 
 
 app.listen(PORT, () => {

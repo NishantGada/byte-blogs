@@ -9,7 +9,7 @@ const TABLE_NAME = 'users';
 // POST /api/auth/login
 router.post('/login', async (req: Request, res: Response) => {
     try {
-        console.log("here!");
+        console.log("inside AuthController");
         const { username, password } = req.body;
 
         // Fetch user from DynamoDB
@@ -36,6 +36,56 @@ router.post('/login', async (req: Request, res: Response) => {
         res.json({ token });
     } catch (error) {
         res.status(500).json({ message: 'Login failed', error });
+    }
+});
+
+// POST /api/auth/register
+router.post('/register', async (req: Request, res: Response) => {
+    try {
+        const { username, password } = req.body;
+
+        // Validation
+        if (!username || !password) {
+            return res.status(400).json({ message: 'Username and password are required' });
+        }
+
+        // Check if user already exists
+        const existingUser = await docClient.get({
+            TableName: TABLE_NAME,
+            Key: { username },
+        }).promise();
+
+        if (existingUser.Item) {
+            return res.status(409).json({ message: 'Username already exists' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user in DynamoDB
+        await docClient.put({
+            TableName: TABLE_NAME,
+            Item: {
+                username,
+                password: hashedPassword,
+                createdAt: new Date().toISOString(),
+            },
+        }).promise();
+
+        // Generate token for immediate login
+        const token = jwt.sign(
+            { username },
+            process.env.JWT_SECRET || 'secret',
+            { expiresIn: '1d' }
+        );
+
+        res.status(201).json({ 
+            message: 'User created successfully',
+            token 
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Registration failed', error });
     }
 });
 
