@@ -1,10 +1,23 @@
 // EditBlog.tsx
-import { Box, Button, Heading, Input, Spinner, VStack, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  SimpleGrid,
+  Spinner,
+  Switch,
+  Text,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 import BlogEditor from "../../components/BlogEditor/BlogEditor";
+import BlogContent from "../../components/BlogContent/BlogContent";
 import { useBlogDraft } from "../../hooks/useBlogDraft";
 
 const EditBlog = () => {
@@ -19,6 +32,7 @@ const EditBlog = () => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const { clearDraft } = useBlogDraft({
     key: `bytes-blog-draft-${id ?? "unknown"}`,
@@ -115,11 +129,18 @@ const EditBlog = () => {
   }
 
   return (
-    <Box maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto">
+    <Box
+      maxW={
+        showPreview
+          ? { base: "95%", md: "95%", lg: "1200px" }
+          : { base: "90%", md: "600px", lg: "70%" }
+      }
+      mx="auto"
+    >
       <Heading as="h2" size="lg" textAlign="center" mb={6}>
         Edit Blog
       </Heading>
-      <VStack spacing={4}>
+      <VStack spacing={4} align="stretch">
         <Input
           placeholder="Title"
           value={title}
@@ -135,7 +156,32 @@ const EditBlog = () => {
           value={coverImage}
           onChange={(e) => setCoverImage(e.target.value)}
         />
-        <BlogEditor key={id} value={content} onChange={setContent} />
+        <Flex justify="flex-end" align="center" gap={2}>
+          <Text fontSize="sm" color="gray.600">
+            Preview
+          </Text>
+          <Switch
+            isChecked={showPreview}
+            onChange={(e) => setShowPreview(e.target.checked)}
+          />
+        </Flex>
+        {showPreview ? (
+          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
+            <BlogEditor key={id} value={content} onChange={setContent} />
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              p={5}
+              bg="white"
+              overflowY="auto"
+              maxH="600px"
+            >
+              <BlogContent html={content} />
+            </Box>
+          </SimpleGrid>
+        ) : (
+          <BlogEditor key={id} value={content} onChange={setContent} />
+        )}
         <Button
           colorScheme="gray"
           w="full"

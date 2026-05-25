@@ -1,9 +1,23 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Heading, Input, VStack, FormControl, FormLabel, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  SimpleGrid,
+  Switch,
+  Text,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
 import BlogEditor from "../../components/BlogEditor/BlogEditor";
+import BlogContent from "../../components/BlogContent/BlogContent";
 import { useBlogDraft } from "../../hooks/useBlogDraft";
 
 const DRAFT_KEY = "bytes-blog-draft-new";
@@ -17,6 +31,7 @@ const CreateBlog: React.FC = () => {
   const [category, setCategory] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [content, setContent] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   const { clearDraft } = useBlogDraft({
     key: DRAFT_KEY,
@@ -75,7 +90,19 @@ const CreateBlog: React.FC = () => {
   };
 
   return (
-    <Box border={"none"} maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto" mb={8} bg="white" borderRadius="md" boxShadow="sm">
+    <Box
+      border="none"
+      maxW={
+        showPreview
+          ? { base: "95%", md: "95%", lg: "1200px" }
+          : { base: "90%", md: "600px", lg: "70%" }
+      }
+      mx="auto"
+      mb={8}
+      bg="white"
+      borderRadius="md"
+      boxShadow="sm"
+    >
       <Heading size="lg" textAlign="center" mb={6}>
         Create New Blog
       </Heading>
@@ -109,8 +136,35 @@ const CreateBlog: React.FC = () => {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel>Content</FormLabel>
-          <BlogEditor value={content} onChange={setContent} />
+          <Flex justify="space-between" align="center" mb={2}>
+            <FormLabel mb={0}>Content</FormLabel>
+            <Flex align="center" gap={2}>
+              <Text fontSize="sm" color="gray.600">
+                Preview
+              </Text>
+              <Switch
+                isChecked={showPreview}
+                onChange={(e) => setShowPreview(e.target.checked)}
+              />
+            </Flex>
+          </Flex>
+          {showPreview ? (
+            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
+              <BlogEditor value={content} onChange={setContent} />
+              <Box
+                borderWidth="1px"
+                borderRadius="md"
+                p={5}
+                bg="white"
+                overflowY="auto"
+                maxH="600px"
+              >
+                <BlogContent html={content} />
+              </Box>
+            </SimpleGrid>
+          ) : (
+            <BlogEditor value={content} onChange={setContent} />
+          )}
         </FormControl>
 
         <Button colorScheme="gray" onClick={handleSubmit}>
