@@ -37,7 +37,7 @@ const CreateBlog: React.FC = () => {
   };
 
   return (
-    <Box className="ql-editor" border={"none"} maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto" mb={8} bg="white" borderRadius="md" boxShadow="sm">
+    <Box border={"none"} maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto" mb={8} bg="white" borderRadius="md" boxShadow="sm">
       <Heading size="lg" textAlign="center" mb={6}>
         Create New Blog
       </Heading>

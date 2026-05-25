@@ -9,7 +9,7 @@ const router = Router();
 const TABLE_NAME = process.env.BLOG_TABLE_NAME!;
 
 // GET /api/blogs → public
-router.get('/blogs', async (_req: Request, res: Response) => {
+router.get('/', async (_req: Request, res: Response) => {
     try {
         const data = await docClient.scan({ TableName: TABLE_NAME }).promise();
         const blogs = data.Items?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -20,7 +20,7 @@ router.get('/blogs', async (_req: Request, res: Response) => {
 });
 
 // GET specifc Blog /api/blogs/:id → public
-router.get('/blogs/:id', async (req: Request, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const blog = await docClient.get({ TableName: TABLE_NAME, Key: { id }, }).promise();
@@ -34,7 +34,7 @@ router.get('/blogs/:id', async (req: Request, res: Response) => {
 });
 
 // POST /api/blogs → protected
-router.post('/blogs', authMiddleware, async (req: Request, res: Response) => {
+router.post('/', authMiddleware, async (req: Request, res: Response) => {
     try {
         const { title, content, category, coverImage } = req.body;
 
@@ -56,7 +56,7 @@ router.post('/blogs', authMiddleware, async (req: Request, res: Response) => {
 });
 
 // PUT /api/blogs/:id → protected
-router.put('/blogs/:id', authMiddleware, async (req: Request, res: Response) => {
+router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const { title, content, category, coverImage } = req.body;
@@ -88,7 +88,7 @@ router.put('/blogs/:id', authMiddleware, async (req: Request, res: Response) => 
 });
 
 // DELETE /api/blogs/:id → protected
-router.delete('/blogs/:id', authMiddleware, async (req: Request, res: Response) => {
+router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
