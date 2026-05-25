@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import DOMPurify from "dompurify";
 import hljs from "highlight.js/lib/common";
 import "highlight.js/styles/atom-one-dark.css";
+import { slugify } from "../../utils/blogHeadings";
 import "./BlogContent.css";
 
 interface BlogContentProps extends Omit<BoxProps, "dangerouslySetInnerHTML"> {
@@ -14,7 +15,17 @@ interface BlogContentProps extends Omit<BoxProps, "dangerouslySetInnerHTML"> {
 const BlogContent = ({ html, emptyMessage, ...boxProps }: BlogContentProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const sanitized = useMemo(() => DOMPurify.sanitize(html ?? ""), [html]);
+  const sanitized = useMemo(() => {
+    const cleaned = DOMPurify.sanitize(html ?? "");
+    if (!cleaned.trim()) return "";
+    const doc = new DOMParser().parseFromString(cleaned, "text/html");
+    doc.querySelectorAll("h1, h2, h3").forEach((node) => {
+      const text = (node.textContent ?? "").trim();
+      if (!text || node.id) return;
+      node.id = slugify(text);
+    });
+    return doc.body.innerHTML;
+  }, [html]);
 
   useEffect(() => {
     if (!contentRef.current) return;
