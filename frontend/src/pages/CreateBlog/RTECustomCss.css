@@ -1,0 +1,21 @@
+/* rte-custom.css */
+.ql-editor pre.ql-syntax {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto;
+  border-left: 4px solid #61dafb;
+}
+
+.ql-editor pre.ql-syntax::-webkit-scrollbar {
+  height: 8px;
+}
+
+.ql-editor pre.ql-syntax::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 4px;
+}

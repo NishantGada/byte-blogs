@@ -53,7 +53,7 @@ const EditBlog = () => {
         });
         alert("Blog updated successfully!");
       }
-      navigate("/admin/view");
+      navigate("/admin");
     } catch (err) {
       console.error(err);
       alert("Failed to update blog.");

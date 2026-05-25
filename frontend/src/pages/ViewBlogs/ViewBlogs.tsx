@@ -83,8 +83,8 @@ const ViewBlogs: React.FC = () => {
 
   return (
     <Box p={6} bg="white" borderRadius="md" minH="60vh">
-      <Heading size="lg" textAlign="center" mb={6}>
-        View Blogs
+      <Heading size="lg" textAlign="left" mb={8}>
+        Your Blogs
       </Heading>
 
       {blogs.length === 0 ? (

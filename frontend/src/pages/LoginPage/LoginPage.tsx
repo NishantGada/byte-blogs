@@ -32,7 +32,7 @@ const LoginPage = () => {
     try {
       const response = await SendRequest('/api/auth/login', { username, password }, 'POST');
       login(response.data.token);
-      navigate('/admin/view');
+      navigate('/admin');
     } catch (err: any) {
       toast({
         title: 'Login failed',

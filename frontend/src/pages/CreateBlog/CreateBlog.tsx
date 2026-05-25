@@ -4,6 +4,7 @@ import { RichTextEditor } from "@mantine/rte";
 import { Box, Button, Heading, Input, VStack, FormControl, FormLabel } from "@chakra-ui/react";
 import SendRequest from "../../api/SendRequest";
 import { AuthContext } from "../../context/AuthContext";
+import './RTECustomCss.css';
 
 const CreateBlog: React.FC = () => {
   const { token } = useContext(AuthContext);
@@ -28,7 +29,7 @@ const CreateBlog: React.FC = () => {
         { Authorization: `Bearer ${token}` }
       );
       alert("Blog created successfully!");
-      navigate("/admin/view");
+      navigate("/admin");
     } catch (err) {
       console.error(err);
       alert("Failed to create blog.");
@@ -36,7 +37,7 @@ const CreateBlog: React.FC = () => {
   };
 
   return (
-    <Box border={"none"} maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto" mb={8} bg="white" borderRadius="md" boxShadow="sm">
+    <Box className="ql-editor" border={"none"} maxW={{ base: "90%", md: "600px", lg: "70%" }} mx="auto" mb={8} bg="white" borderRadius="md" boxShadow="sm">
       <Heading size="lg" textAlign="center" mb={6}>
         Create New Blog
       </Heading>
