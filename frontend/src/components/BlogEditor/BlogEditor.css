@@ -43,13 +43,13 @@
 .tiptap blockquote {
   border-left: 3px solid var(--chakra-colors-accent-muted);
   padding-left: 1rem;
-  color: var(--chakra-colors-warmGray-600);
+  color: var(--chakra-colors-text-muted);
   font-style: italic;
 }
 
 .tiptap code {
-  background: var(--chakra-colors-warmGray-100);
-  color: var(--chakra-colors-warmGray-800);
+  background: var(--chakra-colors-bg-muted);
+  color: var(--chakra-colors-text-primary);
   padding: 0.1em 0.3em;
   border-radius: 0.25em;
   font-size: 0.9em;
@@ -82,7 +82,7 @@
 }
 
 .tiptap a {
-  color: var(--chakra-colors-sage-600);
+  color: var(--chakra-colors-accent-solid);
   text-decoration: underline;
   cursor: pointer;
 }

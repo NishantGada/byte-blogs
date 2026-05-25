@@ -1,9 +1,18 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
-import { FaLongArrowAltRight } from "react-icons/fa";
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Text,
+  useColorMode,
+} from '@chakra-ui/react';
+import { FaLongArrowAltRight, FaMoon, FaSun } from "react-icons/fa";
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const location = useLocation();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const isDark = colorMode === 'dark';
 
   return (
     <Box
@@ -29,20 +38,30 @@ export default function Navbar() {
           </Heading>
         </Link>
 
-        {location.pathname !== "/about" && (
-          <Link to="/about">
-            <Flex
-              alignItems="center"
-              gap={2}
-              color="text.muted"
-              _hover={{ color: "accent.solid" }}
-              transition="color 0.15s"
-            >
-              <Text fontSize="sm">about</Text>
-              <FaLongArrowAltRight />
-            </Flex>
-          </Link>
-        )}
+        <Flex align="center" gap={4}>
+          {location.pathname !== "/about" && (
+            <Link to="/about">
+              <Flex
+                alignItems="center"
+                gap={2}
+                color="text.muted"
+                _hover={{ color: "accent.solid" }}
+                transition="color 0.15s"
+              >
+                <Text fontSize="sm">about</Text>
+                <FaLongArrowAltRight />
+              </Flex>
+            </Link>
+          )}
+          <IconButton
+            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            icon={isDark ? <FaSun /> : <FaMoon />}
+            onClick={toggleColorMode}
+            variant="ghost"
+            colorScheme="gray"
+            size="sm"
+          />
+        </Flex>
       </Flex>
     </Box>
   );

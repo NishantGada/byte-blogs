@@ -1,7 +1,7 @@
 .blog-prose {
   font-size: 1.05rem;
   line-height: 1.75;
-  color: var(--chakra-colors-warmGray-800);
+  color: var(--chakra-colors-text-primary);
   text-align: justify;
 }
 
@@ -53,14 +53,14 @@
 .blog-prose blockquote {
   border-left: 3px solid var(--chakra-colors-accent-muted);
   padding: 0.25em 0 0.25em 1.25rem;
-  color: var(--chakra-colors-warmGray-600);
+  color: var(--chakra-colors-text-muted);
   font-style: italic;
   text-align: left;
 }
 
 .blog-prose code {
-  background: var(--chakra-colors-warmGray-100);
-  color: var(--chakra-colors-warmGray-800);
+  background: var(--chakra-colors-bg-muted);
+  color: var(--chakra-colors-text-primary);
   padding: 0.15em 0.35em;
   border-radius: 0.25em;
   font-size: 0.9em;
@@ -88,15 +88,13 @@
 }
 
 .blog-prose a {
-  color: var(--chakra-colors-sage-600);
+  color: var(--chakra-colors-accent-solid);
   text-decoration: underline;
-  text-decoration-color: var(--chakra-colors-sage-200);
   text-underline-offset: 2px;
 }
 
 .blog-prose a:hover {
-  color: var(--chakra-colors-sage-700);
-  text-decoration-color: var(--chakra-colors-sage-400);
+  color: var(--chakra-colors-accent-hover);
 }
 
 .blog-prose img {
