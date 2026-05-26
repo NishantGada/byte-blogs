@@ -7,6 +7,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
   VStack,
   useToast
 } from '@chakra-ui/react';
@@ -46,7 +47,13 @@ const LoginPage = () => {
   };
 
   return (
-    <Flex minHeight="100vh" align="center" justify="center" px={4} bg="bg.canvas">
+    <Flex
+      minHeight="calc(100vh - 73px)"
+      align="center"
+      justify="center"
+      px={4}
+      py={8}
+    >
       <Box
         width="100%"
         maxW="400px"
@@ -57,9 +64,12 @@ const LoginPage = () => {
         p={{ base: 6, md: 8 }}
         boxShadow="sm"
       >
-        <Heading mb={6} textAlign="center" size="lg">
+        <Heading mb={2} textAlign="center" size="lg">
           Admin Login
         </Heading>
+        <Text mb={6} textAlign="center" color="text.muted" fontSize="sm">
+          Sign in to manage your posts.
+        </Text>
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
