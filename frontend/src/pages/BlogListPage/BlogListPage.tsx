@@ -27,18 +27,10 @@ export interface Blog {
   updatedAt: string;
   coverImage?: string;
   content: string;
+  excerpt?: string;
 }
 
 const SKELETON_COUNT = 4;
-const EXCERPT_CHARS = 200;
-
-const makeExcerpt = (html: string) => {
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  const text = (div.textContent || "").trim();
-  if (text.length <= EXCERPT_CHARS) return text;
-  return text.slice(0, EXCERPT_CHARS).trimEnd() + "…";
-};
 
 const BlogListPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -153,7 +145,7 @@ const BlogListPage = () => {
                 {blog.title}
               </Heading>
               <Text color="text.muted" fontSize="sm" noOfLines={3}>
-                {makeExcerpt(blog.content)}
+                {blog.excerpt}
               </Text>
               <Text fontSize="xs" color="text.subtle" pt={1}>
                 Updated {formatDate(blog.updatedAt)}

@@ -61,7 +61,7 @@ const EditBlog = () => {
         Authorization: `Bearer ${token}`,
       })
         .then((res) => {
-          const blog = res.data.Item;
+          const blog = res.data.Item || res.data;
           setTitle(blog.title);
           setCategory(blog.category);
           setCoverImage(blog.coverImage);
