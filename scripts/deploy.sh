@@ -87,6 +87,78 @@ URL=$(grep -oE 'https://[a-zA-Z0-9.-]+\.vercel\.app' "$TMP_OUT" | tail -1)
 
 rm -f "$TMP_OUT"
 
+# On successful deploy, prune unwanted auto-generated aliases AND
+# project-level domain entries. Vercel re-creates short-form names
+# (e.g. project-eta.vercel.app or a doubled-scope artifact like
+# project-scope-scope.vercel.app) on every deploy, and they appear in
+# both the deployment alias list and the project domain list. We remove
+# them from both so the dashboard "primary" URL stays as the clean
+# project-scope.vercel.app form.
+#
+# Patterns removed:
+#   *-{greek letter}.vercel.app       (alpha, beta, ..., omega)
+#   *-{anything}-{same anything}.vercel.app   (double-scope artifact)
+if [ "$EXIT_CODE" -eq 0 ] && [ "$PROJECT_ID" != "unknown" ]; then
+  VERCEL_AUTH="$HOME/Library/Application Support/com.vercel.cli/auth.json"
+  if [ -f "$VERCEL_AUTH" ]; then
+    TOKEN=$(node -e "try { console.log(JSON.parse(require('fs').readFileSync('$VERCEL_AUTH','utf8')).token) } catch (e) {}" 2>/dev/null)
+    if [ -n "$TOKEN" ]; then
+      echo ""
+      echo "Pruning auto-generated deployment aliases..."
+      curl -s "https://api.vercel.com/v4/aliases?projectId=$PROJECT_ID&limit=20" \
+        -H "Authorization: Bearer $TOKEN" \
+        | node -e "
+          let d='';
+          process.stdin.on('data', c=>d+=c).on('end', ()=>{
+            const j = JSON.parse(d);
+            const greek = /-(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\.vercel\.app$/;
+            const doubled = /-([a-z0-9]+)-\1\.vercel\.app$/;
+            (j.aliases || []).forEach(a => {
+              if (greek.test(a.alias) || doubled.test(a.alias)) {
+                console.log(a.uid + '\t' + a.alias);
+              }
+            });
+          });
+        " | while IFS=$'\t' read -r uid alias; do
+          if [ -n "$uid" ] && [ -n "$alias" ]; then
+            result=$(curl -s -X DELETE "https://api.vercel.com/v2/aliases/$uid" -H "Authorization: Bearer $TOKEN")
+            if echo "$result" | grep -q '"status":"SUCCESS"'; then
+              echo "  removed alias: $alias"
+            else
+              echo "  failed to remove alias $alias: $result"
+            fi
+          fi
+        done
+
+      echo "Pruning auto-generated project-level domains..."
+      curl -s "https://api.vercel.com/v9/projects/$PROJECT_ID/domains" \
+        -H "Authorization: Bearer $TOKEN" \
+        | node -e "
+          let d='';
+          process.stdin.on('data', c=>d+=c).on('end', ()=>{
+            const j = JSON.parse(d);
+            const greek = /-(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\.vercel\.app$/;
+            const doubled = /-([a-z0-9]+)-\1\.vercel\.app$/;
+            (j.domains || []).forEach(domain => {
+              if (greek.test(domain.name) || doubled.test(domain.name)) {
+                console.log(domain.name);
+              }
+            });
+          });
+        " | while IFS= read -r domain; do
+          if [ -n "$domain" ]; then
+            result=$(curl -s -X DELETE "https://api.vercel.com/v9/projects/$PROJECT_ID/domains/$domain" -H "Authorization: Bearer $TOKEN")
+            if [ "$result" = "{}" ] || echo "$result" | grep -q '"uid"'; then
+              echo "  removed domain: $domain"
+            else
+              echo "  failed to remove domain $domain: $result"
+            fi
+          fi
+        done
+    fi
+  fi
+fi
+
 echo ""
 echo "Done. Log appended to $LOG_FILE"
-exit $EXIT_CODE
+exit "$EXIT_CODE"

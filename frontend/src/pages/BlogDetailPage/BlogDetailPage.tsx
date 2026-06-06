@@ -63,7 +63,7 @@ const BlogDetailPage = () => {
   return (
     <Container maxW="1200px" py={{ base: 6, md: 10 }} px={{ base: 4, md: 8 }}>
       <Box mb={6}>
-        <Link to="/blogs">
+        <Link to="/">
           <Flex
             alignItems="center"
             gap={2}

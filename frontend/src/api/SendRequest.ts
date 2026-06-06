@@ -12,7 +12,7 @@ const SendRequest = async (
   headers: Record<string, string> = {},
   authRequired: boolean = false
 ) => {
-  const baseUrl = 'http://localhost:3000'; // adjust if using different frontend/backend ports
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
   path = baseUrl + path;
 
   if (authRequired) {

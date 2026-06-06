@@ -26,15 +26,16 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <Navbar />
       <Routes>
-        {/* Public login route */}
-        <Route path="/login" element={<LoginPage />} />
-
-        <Route path="/blogs" element={<BlogListPage />} />
+        {/* Public home and blog routes */}
+        <Route path="/" element={<BlogListPage />} />
+        <Route path="/blogs" element={<Navigate to="/" replace />} />
         <Route path="/blogs/:id" element={<BlogDetailPage />} />
-        
         <Route path="/about" element={<About />} />
 
-        {/* Admin routes */}
+        {/* Auth (only the admin needs this) */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Admin routes - gated */}
         <Route
           path="/admin/*"
           element={
@@ -44,8 +45,8 @@ const App = () => {
           }
         />
 
-        {/* Redirect any unknown route to login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Anything else falls back to the public home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </ChakraProvider>
   );

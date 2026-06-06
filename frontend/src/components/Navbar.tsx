@@ -43,7 +43,7 @@ export default function Navbar() {
         alignItems="center"
         justify="space-between"
       >
-        <RouterLink to="/blogs">
+        <RouterLink to="/">
           <Heading size="md" letterSpacing="-0.01em">
             ByteBlogs
           </Heading>
