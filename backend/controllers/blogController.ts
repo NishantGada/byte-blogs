@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import docClient from '../utils/dynamoClient';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { authMiddleware } from '../middleware/authMiddleware';
 import dotenv from 'dotenv';
 dotenv.config({ debug: false });
@@ -39,7 +39,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
         const { title, content, category, coverImage } = req.body;
 
         const blog = {
-            id: uuidv4(),
+            id: randomUUID(),
             title,
             content,
             category,
