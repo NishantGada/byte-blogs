@@ -190,8 +190,6 @@ dist
 .history
 .ionide
 
-/frontend/notes
-
 # Local-only files (not for git)
 .claude/
 project-notes/
