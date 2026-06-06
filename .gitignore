@@ -191,3 +191,7 @@ dist
 .ionide
 
 /frontend/notes
+
+# Local-only files (not for git)
+.claude/
+DEPLOY_LOG.md
