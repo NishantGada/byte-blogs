@@ -2,8 +2,7 @@
 #
 # Deploy wrapper around `vercel --prod`.
 # Captures timestamp, exit code, deploy URL, and on failure the tail of
-# output, then appends a structured entry to DEPLOY_LOG.md at the repo
-# root.
+# output, then appends a structured entry to project-notes/DEPLOY_LOG.md.
 #
 # Usage:
 #   Run from inside a Vercel-linked project directory (e.g. backend/ or
@@ -19,8 +18,10 @@ set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-LOG_FILE="$REPO_ROOT/DEPLOY_LOG.md"
+LOG_FILE="$REPO_ROOT/project-notes/DEPLOY_LOG.md"
 PROJECT_DIR_NAME="$(basename "$PWD")"
+
+mkdir -p "$(dirname "$LOG_FILE")"
 
 if [ ! -d ".vercel" ]; then
   echo "Error: no .vercel directory found in $PWD."
