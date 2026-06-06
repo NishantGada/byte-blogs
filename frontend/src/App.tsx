@@ -29,7 +29,7 @@ const App = () => {
         {/* Public home and blog routes */}
         <Route path="/" element={<BlogListPage />} />
         <Route path="/blogs" element={<Navigate to="/" replace />} />
-        <Route path="/blogs/:id" element={<BlogDetailPage />} />
+        <Route path="/blogs/:slug" element={<BlogDetailPage />} />
         <Route path="/about" element={<About />} />
 
         {/* Auth (only the admin needs this) */}

@@ -21,16 +21,16 @@ import BlogContent from "../../components/BlogContent/BlogContent";
 import type { Blog } from "../BlogListPage/BlogListPage";
 
 const BlogDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
     const fetchBlog = async () => {
-      if (!id) return;
+      if (!slug) return;
       try {
-        const res = await SendRequest(`/api/blogs/${id}`, {}, "GET");
+        const res = await SendRequest(`/api/blogs/${slug}`, {}, "GET");
         setBlog(res.data.Item || res.data);
       } catch (err: any) {
         console.error(err);
@@ -46,7 +46,7 @@ const BlogDetailPage = () => {
       }
     };
     fetchBlog();
-  }, [id, toast]);
+  }, [slug, toast]);
 
   const headings = useMemo(
     () => (blog ? extractHeadings(blog.content) : []),

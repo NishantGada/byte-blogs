@@ -20,6 +20,7 @@ import { formatDate } from "../../utils/FormatDate";
 
 export interface Blog {
   id: string;
+  slug: string;
   title: string;
   category: string;
   createdAt: string;
@@ -115,7 +116,7 @@ const BlogListPage = () => {
           <Box
             key={blog.id}
             as={RouterLink}
-            to={`/blogs/${blog.id}`}
+            to={`/blogs/${blog.slug}`}
             borderWidth="1px"
             borderColor="border.default"
             borderRadius="lg"
